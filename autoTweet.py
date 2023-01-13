@@ -44,7 +44,8 @@ def getPodTweets():
         queue.append(tweets)
 
 def saveLocalCalendar():
-    os.remove(localCal)
+    if os.path.exists(localCal):
+        os.remove(localCal)
     for post in posts:
         eventTime = post["eventTime"]
         url = post["url"]
@@ -75,7 +76,6 @@ def getNewEvents():
                 if (eventTime > curTime and url not in localEvents):
                     title = post["title"]
                     eventInfo = eventTime.strftime("%Y-%m-%d %X") + ": " + title + ", " + url
-                    print(eventInfo)
                     if (len(tweet) + len(eventInfo) < 280):
                         if (len(tweet) == 0 and len(tweets) == 0):
                             tweet = "Nya event i kalendern:\n"
@@ -136,6 +136,17 @@ def comingMonth():
     if (len(tweets) > 0):
         queue.append(tweets)
 
+def inTwoHours():
+    tweets = []
+    for post in posts:
+        eventTime = post["eventTime"]
+        url = post["url"]
+        if (eventTime < curTime+timedelta(hours=2)):
+            title = post["title"]
+            tweets.append("Snart är det dags för " + title + "! \n" + url)
+    if (len(tweets) > 0):
+        queue.append(tweets)
+
 def todayTomorrow():
     today = ""
     todays = []
@@ -159,7 +170,6 @@ def todayTomorrow():
                 if (len(tomorrow) == 0 and len(tomorrows) == 0):
                     tomorrow = "Följande evenemang finns i kalendern för imorgon:\n"
                 tomorrow += eventInfo + "\n"
-                print(tomorrow)
             else:
                 tomorrows.append(tomorrow)
                 tomorrow = ""
@@ -171,33 +181,37 @@ def todayTomorrow():
     if (len(tweets) > 0):
         queue.append(tweets)
 
-getPodTweets()
-getNewEvents()
-todayTomorrow()
-comingWeek()
-comingMonth()
-
-
 def gatherPosts():
-    if (curTime.day == 1 and curTime.hour == 9):
-        comingMonth()
-    elif (curTime.weekday() == 6 and curTime.hour == 17):
-        comingWeek()
-    elif (curTime.hour == 9):
-        todayTomorrow()
-    #events in two hours
+    inTwoHours()
+    #if (curTime.day == 1 and curTime.hour == 9):
+    comingMonth()
+    #elif (curTime.weekday() == 6 and curTime.hour == 17):
+    comingWeek()
+    #elif (curTime.hour == 9):
+    todayTomorrow()
     getPodTweets()
     getNewEvents()
     saveLocalCalendar()
 
 def postTweets():
+    gatherPosts()
+    
+    if (len(queue) == 0):
+        return
+    elif (len(queue) < 6):
+        waitTime = 10
+    elif (len(queue) < 12):
+        waitTime = 5
+    else:
+        waitTime = 1
     for section in queue:
         for tweet in section:
-            print(tweet)
+            a = twitter.update_status(status=tweet, auto_populate_reply_metadata=True)
+            print(a)
+        time.sleep(waitTime * 60)
+
 
 postTweets()
-# gatherPosts()
-
 
 
     #list(map(itemgetter('value'), post.content))
