@@ -75,7 +75,7 @@ def getNewEvents():
                 url = post["url"]
                 if (eventTime > curTime and url not in localEvents):
                     title = post["title"]
-                    eventInfo = eventTime.strftime("%Y-%m-%d %X") + ": " + title + ", " + url
+                    eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + ", " + url
                     if (len(tweet) + len(eventInfo) < 280):
                         if (len(tweet) == 0 and len(tweets) == 0):
                             tweet = "Nya event i kalendern:\n"
@@ -96,7 +96,7 @@ def comingWeek():
         url = post["url"]
         if (eventTime.isocalendar().week == curTime.isocalendar().week + 1):
             title = post["title"]
-            eventInfo = eventTime.strftime("%Y-%m-%d %X") + ": " + title + ", " + url
+            eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + ", " + url
             if (len(tweet) + len(eventInfo) < 280):
                 if (len(tweet) == 0 and len(tweets) == 0):
                     tweet = "Här är kommande veckans händelser:\n"
@@ -122,7 +122,7 @@ def comingMonth():
         url = post["url"]
         if (eventTime.month == curTime.month and eventTime.year == curTime.year):
             title = post["title"]
-            eventInfo = eventTime.strftime("%Y-%m-%d %X") + ": " + title + ", " + url
+            eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + ", " + url
             if (len(tweet) + len(eventInfo) < 280):
                 if (len(tweet) == 0 and len(tweets) == 0):
                     tweet = "Här är alla händelser i kalendern för " + month + ":\n"
@@ -156,7 +156,7 @@ def todayTomorrow():
         eventTime = post["eventTime"]
         url = post["url"]
         title = post["title"]
-        eventInfo = eventTime.strftime("%Y-%m-%d %X") + ": " + title + ", " + url
+        eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + " " + url
         if (eventTime.date() == curTime.date()):
             if (len(today) + len(eventInfo) < 280):
                 if (len(today) == 0 and len(todays) == 0):
@@ -183,15 +183,15 @@ def todayTomorrow():
 
 def gatherPosts():
     inTwoHours()
-    #if (curTime.day == 1 and curTime.hour == 9):
-    comingMonth()
-    #elif (curTime.weekday() == 6 and curTime.hour == 17):
-    comingWeek()
-    #elif (curTime.hour == 9):
-    todayTomorrow()
-    getPodTweets()
-    getNewEvents()
-    saveLocalCalendar()
+    if (curTime.day == 1 and curTime.hour == 9):
+        comingMonth()
+    elif (curTime.weekday() == 6 and curTime.hour == 17):
+        comingWeek()
+    elif (curTime.hour == 9):
+        todayTomorrow()
+        getPodTweets()
+        getNewEvents()
+        saveLocalCalendar()
 
 def postTweets():
     gatherPosts()
@@ -204,27 +204,17 @@ def postTweets():
         waitTime = 5
     else:
         waitTime = 1
+    a = ""
     for section in queue:
         for tweet in section:
-            a = twitter.update_status(status=tweet, auto_populate_reply_metadata=True)
-            print(a)
+            if (len(a) == 0):
+                a = twitter.update_status(status=tweet, auto_populate_reply_metadata=True)
+            else:
+                a = twitter.update_status(status=tweet, in_reply_to_status_id=a["id"], auto_populate_reply_metadata=True)
         time.sleep(waitTime * 60)
 
 
 postTweets()
-
-
-    #list(map(itemgetter('value'), post.content))
-
-
-def sendTweet(tweetid, text, user):
-   
-    response = twitter.upload_media(media=photo)
-    try:
-        a = twitter.update_status(status=status, in_reply_to_status_id=tweetid, auto_populate_reply_metadata=True)
-        return "Success!"
-    except TwythonError as e:
-        return "Error!" + e
 
 def writeLog(message):
     now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
