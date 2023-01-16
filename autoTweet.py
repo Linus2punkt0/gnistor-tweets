@@ -9,8 +9,9 @@ import locale
 tz = pytz.timezone("Europe/Stockholm")
 curTime = datetime.now(tz)
 timeLimit = curTime - timedelta(hours = 1)
-localCal = "./calendar.csv"
-authFile = "./auth"
+basePath = "/var/www/local/gnistorTweet"
+localCal = basePath + "/calendar.csv"
+authFile = basePath + "/auth"
 calendar = feedparser.parse("https://www.gnistor.se/feed/index.xml")
 podfeed = feedparser.parse("https://www.gnistor.se/podcast/index.xml")
 posts = []
