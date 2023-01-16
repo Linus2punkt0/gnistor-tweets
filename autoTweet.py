@@ -42,7 +42,7 @@ for post in calendar.entries:
     if (eventTime > curTime):
         item = {
             "title": post.title,
-            "eventTime": datetime.strptime(post.published, '%a, %d %b %Y %X %z'),
+            "eventTime": eventTime,
             "url": post.link
         }
         posts.insert(0, item)
@@ -72,7 +72,7 @@ def saveLocalCalendar():
         else:
             append_write = 'w'
         dst = open(localCal, append_write, encoding='utf-8')
-        dst.write(url + "," + str(eventTime) + "\n" )
+        dst.write(url + "," + eventTime.strftime("%Y-%m-%d %X%z") + "\n" )
         dst.close()
 
 def getNewEvents():
