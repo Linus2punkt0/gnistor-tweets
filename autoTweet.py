@@ -217,9 +217,9 @@ def gatherPosts():
         comingWeek()
     elif (curTime.hour == 9):
         todayTomorrow()
-        getPodTweets()
-        getNewEvents()
-        saveLocalCalendar()
+    getPodTweets()
+    getNewEvents()
+    saveLocalCalendar()
 
 def postTweets():
     gatherPosts()
