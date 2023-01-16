@@ -22,6 +22,20 @@ queue = []
 
 twitter = Twython(auth.APP_KEY, auth.APP_SECRET, auth.OAUTH_TOKEN, auth.OAUTH_TOKEN_SECRET)
 
+
+def writeLog(message):
+    now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    date = datetime.now().strftime("%y%m%d")
+    message = str(now) + ": " + message + "\n"
+    log = logPath + "gnistor_" + date + ".log"
+    if os.path.exists(log):
+        append_write = 'a'
+    else:
+        append_write = 'w'
+    dst = open(log, append_write)
+    dst.write(message)
+    dst.close()
+
 # Itterating through the feed and collecting the relevant data from all future events. Also reverses the order of the feed, to get events closer in time first.
 for post in calendar.entries:
     eventTime = datetime.strptime(post.published, '%a, %d %b %Y %X %z')
@@ -229,15 +243,4 @@ def postTweets():
 
 postTweets()
 
-def writeLog(message):
-    now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    date = datetime.now().strftime("%y%m%d")
-    message = str(now) + ": " + message + "\n"
-    log = logPath + "gnistor_" + date + ".log"
-    if os.path.exists(log):
-        append_write = 'a'
-    else:
-        append_write = 'w'
-    dst = open(log, append_write)
-    dst.write(message)
-    dst.close()
+
