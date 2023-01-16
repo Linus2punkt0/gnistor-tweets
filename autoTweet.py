@@ -10,6 +10,7 @@ tz = pytz.timezone("Europe/Stockholm")
 curTime = datetime.now(tz)
 timeLimit = curTime - timedelta(hours = 1)
 basePath = "/var/www/local/gnistorTweet"
+logPath = "/var/www/local/logs/"
 localCal = basePath + "/calendar.csv"
 authFile = basePath + "/auth"
 calendar = feedparser.parse("https://www.gnistor.se/feed/index.xml")
@@ -43,6 +44,8 @@ def getPodTweets():
             tweets.append(tweet)
     if (len(tweets) > 0):
         queue.append(tweets)
+    else:
+        writeLog("No new podcast episodes")
 
 def saveLocalCalendar():
     if os.path.exists(localCal):
@@ -88,6 +91,8 @@ def getNewEvents():
                 tweets.append(tweet)
             if (len(tweets) > 0):
                 queue.append(tweets)
+            else:
+                writeLog("No new events in the calendar")
 
 def comingWeek():
     tweet = ""
@@ -110,6 +115,8 @@ def comingWeek():
         tweets.append(tweet)
     if (len(tweets) > 0):
         queue.append(tweets)
+    else:
+        writeLog("No events in the coming week")
     
 def comingMonth():
     saved = locale._setlocale(locale.LC_TIME)
@@ -136,6 +143,8 @@ def comingMonth():
         tweets.append(tweet)
     if (len(tweets) > 0):
         queue.append(tweets)
+    else:
+        writeLog("No events in the coming month")
 
 def inTwoHours():
     tweets = []
@@ -147,6 +156,8 @@ def inTwoHours():
             tweets.append("Snart är det dags för " + title + "! \n" + url)
     if (len(tweets) > 0):
         queue.append(tweets)
+    else:
+        writeLog("No events coming up in the next two hours")
 
 def todayTomorrow():
     today = ""
@@ -181,6 +192,8 @@ def todayTomorrow():
     tweets = todays + tomorrows
     if (len(tweets) > 0):
         queue.append(tweets)
+    else:
+        writeLog("No events for today or tomorrow")
 
 def gatherPosts():
     inTwoHours()
@@ -196,7 +209,6 @@ def gatherPosts():
 
 def postTweets():
     gatherPosts()
-    
     if (len(queue) == 0):
         return
     elif (len(queue) < 6):
@@ -221,7 +233,7 @@ def writeLog(message):
     now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     date = datetime.now().strftime("%y%m%d")
     message = str(now) + ": " + message + "\n"
-    log = logpath + date + ".log"
+    log = logPath + "gnistor_" + date + ".log"
     if os.path.exists(log):
         append_write = 'a'
     else:
