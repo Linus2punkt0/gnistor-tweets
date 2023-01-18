@@ -93,7 +93,7 @@ def getNewEvents():
                 url = post["url"]
                 if (eventTime > curTime and url not in localEvents):
                     title = post["title"]
-                    eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + ", " + url
+                    eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + " " + url
                     if (len(tweet) + len(eventInfo) < 280):
                         if (len(tweet) == 0 and len(tweets) == 0):
                             tweet = "Nya event i kalendern:\n"
