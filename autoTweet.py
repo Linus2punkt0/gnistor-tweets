@@ -1,7 +1,7 @@
+# -*- coding: utf-8 -*-
 from twython import Twython, TwythonError
 from datetime import date, datetime, timedelta
 from operator import itemgetter
-#from django.http import HttpResponse
 import random, time, os, feedparser, csv, pytz
 import auth
 import locale
