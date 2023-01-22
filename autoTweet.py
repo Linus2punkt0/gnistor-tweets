@@ -135,7 +135,7 @@ def comingWeek():
 def comingMonth():
     saved = locale._setlocale(locale.LC_TIME)
     locale.setlocale(locale.LC_TIME, 'sv_SE')
-    month = curTime.strftime('%B')
+    month = (curTime+timedelta(days=1)).strftime('%B')
     locale.setlocale(locale.LC_TIME, saved)
     tweet = ""
     tweets = []
