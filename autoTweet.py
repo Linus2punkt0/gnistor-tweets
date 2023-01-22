@@ -211,7 +211,7 @@ def inTwoHours():
 
 def gatherPosts():
     inTwoHours()
-    if (curTime.day == 1 and curTime.hour == 9):
+    if (isLastOfMonth() and curTime.hour == 9):
         comingMonth()
     elif (curTime.weekday() == 6 and curTime.hour == 17):
         comingWeek()
@@ -220,6 +220,14 @@ def gatherPosts():
     getPodTweets()
     getNewEvents()
     saveLocalCalendar()
+
+def isLastOfMonth():
+    today = curTime.month
+    tomorrow = (curTime+timedelta(days=1)).month
+    if (today != tomorrow):
+        print(True)
+    else:
+        print(False)
 
 def postTweets():
     gatherPosts()
