@@ -241,8 +241,6 @@ def postTweets():
         time.sleep(waitTime * 60)
 
 
-#postTweets()
-comingWeek()
-print(queue)
+postTweets()
 
 
