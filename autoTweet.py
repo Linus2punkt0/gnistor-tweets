@@ -2,7 +2,7 @@
 from twython import Twython, TwythonError
 from datetime import date, datetime, timedelta
 from operator import itemgetter
-import random, time, os, feedparser, csv, pytz
+import time, os, feedparser, csv, pytz
 import auth
 import locale
 
@@ -114,7 +114,7 @@ def comingWeek():
     for post in posts:
         eventTime = post["eventTime"]
         url = post["url"]
-        if (eventTime.isocalendar().week == curTime.isocalendar().week + 1):
+        if (eventTime.isocalendar()[1] == curTime.isocalendar()[1] + 1):
             title = post["title"]
             eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + ", " + url
             if (len(tweet) + len(eventInfo) < 280):
@@ -160,19 +160,6 @@ def comingMonth():
     else:
         writeLog("No events in the coming month")
 
-def inTwoHours():
-    tweets = []
-    for post in posts:
-        eventTime = post["eventTime"]
-        url = post["url"]
-        if (eventTime < curTime+timedelta(hours=2)):
-            title = post["title"]
-            tweets.append("Snart är det dags för " + title + "! \n" + url)
-    if (len(tweets) > 0):
-        queue.append(tweets)
-    else:
-        writeLog("No events coming up in the next two hours")
-
 def todayTomorrow():
     today = ""
     todays = []
@@ -182,11 +169,11 @@ def todayTomorrow():
         eventTime = post["eventTime"]
         url = post["url"]
         title = post["title"]
-        eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + " " + url
+        eventInfo = eventTime.strftime("%H:%M") + ": " + title + " " + url
         if (eventTime.date() == curTime.date()):
             if (len(today) + len(eventInfo) < 280):
                 if (len(today) == 0 and len(todays) == 0):
-                    today = "Missa inte dagens evenemang:\n"
+                    today = "Här är dagens evenemang:\n"
                 today += eventInfo + "\n"
             else:
                 todays.append(today)
@@ -208,6 +195,19 @@ def todayTomorrow():
         queue.append(tweets)
     else:
         writeLog("No events for today or tomorrow")
+
+def inTwoHours():
+    tweets = []
+    for post in posts:
+        eventTime = post["eventTime"]
+        url = post["url"]
+        if (eventTime < curTime+timedelta(hours=2)):
+            title = post["title"]
+            tweets.append("Nu börjar snart " + title + "! \n" + url)
+    if (len(tweets) > 0):
+        queue.append(tweets)
+    else:
+        writeLog("No events coming up in the next two hours")
 
 def gatherPosts():
     inTwoHours()
@@ -241,6 +241,8 @@ def postTweets():
         time.sleep(waitTime * 60)
 
 
-postTweets()
+#postTweets()
+comingWeek()
+print(queue)
 
 
