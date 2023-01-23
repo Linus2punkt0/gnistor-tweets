@@ -181,7 +181,7 @@ def todayTomorrow():
         elif (eventTime.date() == curTime.date() + timedelta(days=1)):
             if (len(tomorrow) + len(eventInfo) < 280):
                 if (len(tomorrow) == 0 and len(tomorrows) == 0):
-                    tomorrow = "Följande evenemang finns i kalendern för imorgon:\n"
+                    tomorrow = "Här är vad som händer imorgon:\n"
                 tomorrow += eventInfo + "\n"
             else:
                 tomorrows.append(tomorrow)
@@ -189,12 +189,15 @@ def todayTomorrow():
     if (len(today) > 0):
         todays.append(today)
     if (len(tomorrow) > 0):
-        tomorrows.append(tomorrow)
-    tweets = todays + tomorrows
-    if (len(tweets) > 0):
-        queue.append(tweets)
+        tomorrows.append(tomorrows)
+    if (len(todays) > 0):
+        queue.append(today)
     else:
-        writeLog("No events for today or tomorrow")
+        writeLog("No events for today")
+    if (len(tomorrows) > 0):
+        queue.append(tomorrows)
+    else:
+        writeLog("No events for tomorrow")
 
 def inTwoHours():
     tweets = []
