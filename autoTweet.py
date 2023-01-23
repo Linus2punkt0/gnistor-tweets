@@ -228,9 +228,9 @@ def isLastOfMonth():
     today = curTime.month
     tomorrow = (curTime+timedelta(days=1)).month
     if (today != tomorrow):
-        print(True)
+        return True
     else:
-        print(False)
+        return False
 
 def postTweets():
     gatherPosts()
