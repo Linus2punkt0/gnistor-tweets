@@ -58,6 +58,7 @@ def getPodTweets():
             tweets.append(tweet)
     if (len(tweets) > 0):
         queue.append(tweets)
+        writeLog("Following podcast episodes found: \n" + tweets.join("\n"))
     else:
         writeLog("No new podcast episodes")
 
@@ -105,6 +106,7 @@ def getNewEvents():
                 tweets.append(tweet)
             if (len(tweets) > 0):
                 queue.append(tweets)
+                writeLog("Following new events found: \n" + tweets.join("\n"))
             else:
                 writeLog("No new events in the calendar")
 
@@ -129,6 +131,7 @@ def comingWeek():
         tweets.append(tweet)
     if (len(tweets) > 0):
         queue.append(tweets)
+        writeLog("Following events found for the coming week: \n" + tweets.join("\n"))
     else:
         writeLog("No events in the coming week")
     
@@ -157,6 +160,7 @@ def comingMonth():
         tweets.append(tweet)
     if (len(tweets) > 0):
         queue.append(tweets)
+        writeLog("Following events found for the coming month: \n" + tweets.join("\n"))
     else:
         writeLog("No events in the coming month")
 
@@ -192,10 +196,12 @@ def todayTomorrow():
         tomorrows.append(tomorrows)
     if (len(todays) > 0):
         queue.append(today)
+        writeLog("Following events found for today: \n" + todays.join("\n"))
     else:
         writeLog("No events for today")
     if (len(tomorrows) > 0):
         queue.append(tomorrows)
+        writeLog("Following events found for tomorrow: \n" + tomorrows.join("\n"))
     else:
         writeLog("No events for tomorrow")
 
@@ -209,6 +215,7 @@ def inTwoHours():
             tweets.append("Nu börjar snart " + title + "! \n" + url)
     if (len(tweets) > 0):
         queue.append(tweets)
+        writeLog("Following events found for the next two hours: \n" + tweets.join("\n"))
     else:
         writeLog("No events coming up in the next two hours")
 
