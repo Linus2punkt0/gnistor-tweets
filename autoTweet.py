@@ -194,7 +194,7 @@ def todayTomorrow():
     if (len(today) > 0):
         todays.append(today)
     if (len(tomorrow) > 0):
-        tomorrows.append(tomorrows)
+        tomorrows.append(tomorrow)
     if (len(todays) > 0):
         queue.append(today)
         writeLog("Following events found for today: \n" + "\n".join(todays))
