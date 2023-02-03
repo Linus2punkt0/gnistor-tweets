@@ -39,12 +39,17 @@ def writeLog(message):
 # Itterating through the feed and collecting the relevant data from all future events. Also reverses the order of the feed, to get events closer in time first.
 for post in calendar.entries:
     eventTime = datetime.strptime(post.gnistor_startdate, '%a, %d %b %Y %X %z')
-    eventTitle = post.gnistor_organizer + " anordnar " + post.title
+    if (len(post.gnistor_organizer) > 0):
+        eventTitle = post.gnistor_organizer + " anordnar " + post.title
+    else:
+        eventTitle = post.title
     if (eventTime > curTime):
         item = {
             "title": eventTitle,
+            "shortTitle": post.title,
             "eventTime": eventTime,
-            "url": post.link
+            "url": post.link,
+            "location": post.gnistor_locations
         }
         posts.insert(0, item)
 
@@ -93,9 +98,13 @@ def getNewEvents():
             for post in posts:
                 eventTime = post["eventTime"]
                 url = post["url"]
+                location = post["location"]
                 if (eventTime > curTime and url not in localEvents):
                     title = post["title"]
-                    eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + " " + url
+                    if (len(location) > 0):
+                        eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + " (" + location + ") " + url
+                    else:
+                        eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + url
                     if (len(tweet) + len(eventInfo) < 280):
                         if (len(tweet) == 0 and len(tweets) == 0):
                             tweet = "Nya event i kalendern:\n"
@@ -118,8 +127,12 @@ def comingWeek():
         eventTime = post["eventTime"]
         url = post["url"]
         if (eventTime.isocalendar()[1] == curTime.isocalendar()[1] + 1):
+            location = post["location"]
             title = post["title"]
-            eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + ", " + url
+            if (len(location) > 0):
+                eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ", " + location + ": " + title + ", " + url
+            else:
+                eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + ", " + url
             if (len(tweet) + len(eventInfo) < 280):
                 if (len(tweet) == 0 and len(tweets) == 0):
                     tweet = "Här är kommande veckans händelser:\n"
@@ -146,9 +159,13 @@ def comingMonth():
     for post in posts:
         eventTime = post["eventTime"]
         url = post["url"]
-        if (eventTime.month == curTime.month and eventTime.year == curTime.year):
+        if ((curTime+timedelta(days=1)).month == curTime.month and eventTime.year == (curTime+timedelta(days=1)).year):
             title = post["title"]
-            eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + ", " + url
+            location = post["location"]
+            if (len(location) > 0):
+                eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ", " + location + ": " + title + ", " + url
+            else:
+                eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + ", " + url
             if (len(tweet) + len(eventInfo) < 280):
                 if (len(tweet) == 0 and len(tweets) == 0):
                     tweet = "Här är alla händelser i kalendern för " + month + ":\n"
@@ -174,7 +191,11 @@ def todayTomorrow():
         eventTime = post["eventTime"]
         url = post["url"]
         title = post["title"]
-        eventInfo = eventTime.strftime("%H:%M") + ": " + title + " " + url
+        location = post["location"]
+        if (len(location) > 0):
+            eventInfo = eventTime.strftime("%H:%M") + ", " + location + ": " + title + ", " + url
+        else:
+            eventInfo = eventTime.strftime("%H:%M") + ": " + title + " " + url
         if (eventTime.date() == curTime.date()):
             if (len(today) + len(eventInfo) < 280):
                 if (len(today) == 0 and len(todays) == 0):
@@ -212,8 +233,12 @@ def inTwoHours():
         eventTime = post["eventTime"]
         url = post["url"]
         if (eventTime < curTime+timedelta(hours=2)):
-            title = post["title"]
-            tweets.append("Nu börjar snart " + title + "! \n" + url)
+            location = post["location"]
+            title = post["shortTitle"]
+            if (len(location) > 0):
+                tweets.append("Nu börjar snart " + title + " (" + location + ")! \n" + url)
+            else:
+                tweets.append("Nu börjar snart " + title + "! \n" + url)
     if (len(tweets) > 0):
         queue.append(tweets)
         writeLog("Following events found for the next two hours: \n" + "\n".join(tweets))
