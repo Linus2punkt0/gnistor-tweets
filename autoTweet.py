@@ -106,7 +106,7 @@ def getNewEvents():
                 tweets.append(tweet)
             if (len(tweets) > 0):
                 queue.append(tweets)
-                writeLog("Following new events found: \n" + tweets.join("\n"))
+                writeLog("Following new events found: \n" + "\n".join(tweets))
             else:
                 writeLog("No new events in the calendar")
 
