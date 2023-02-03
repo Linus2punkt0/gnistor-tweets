@@ -38,10 +38,11 @@ def writeLog(message):
 
 # Itterating through the feed and collecting the relevant data from all future events. Also reverses the order of the feed, to get events closer in time first.
 for post in calendar.entries:
-    eventTime = datetime.strptime(post.published, '%a, %d %b %Y %X %z')
+    eventTime = datetime.strptime(post.gnistor_startdate, '%a, %d %b %Y %X %z')
+    eventTitle = post.gnistor_organizer + " anordnar " + post.title
     if (eventTime > curTime):
         item = {
-            "title": post.title,
+            "title": eventTitle,
             "eventTime": eventTime,
             "url": post.link
         }
