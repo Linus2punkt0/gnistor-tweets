@@ -101,18 +101,21 @@ def getNewEvents():
                 location = post["location"]
                 if (eventTime > curTime and url not in localEvents):
                     title = post["title"]
+                    writeLog("New event: " + title)
                     if (len(location) > 0):
                         eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + " (" + location + ") " + url
                     else:
                         eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + url
+                    writeLog("Eventinfo: " + eventInfo)
                     if (len(tweet) + len(eventInfo) < 280):
                         if (len(tweet) == 0 and len(tweets) == 0):
+                            writeLog("This is the first tweet with new events")
                             tweet = "Nya event i kalendern:\n"
                         tweet += eventInfo + "\n"
                     else:
                         tweets.append(tweet)
                         tweet = "Nya event i kalendern:\n"
-            if (len(tweet) > 0):
+            if (len(tweet) > 30):
                 tweets.append(tweet)
             if (len(tweets) > 0):
                 queue.append(tweets)
@@ -281,11 +284,15 @@ def postTweets():
         waitTime = 1
     a = ""
     for section in queue:
+        writeLog("Following tweets found in current section: " + ", ".join(section))
         for tweet in section:
             if (len(a) == 0):
+                writeLog("Posting tweet: " + tweet)
                 a = twitter.update_status(status=tweet, auto_populate_reply_metadata=True)
             else:
+                writeLog("Posting tweet: " + tweet + " as a reply")
                 a = twitter.update_status(status=tweet, in_reply_to_status_id=a["id"], auto_populate_reply_metadata=True)
+        writeLog("Reply from Twitter: " + a)
         time.sleep(waitTime * 60)
 
 
