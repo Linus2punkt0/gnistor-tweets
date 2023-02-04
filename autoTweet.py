@@ -232,10 +232,12 @@ def todayTomorrow():
 
 def inTwoHours():
     tweets = []
+    tweeted = False;
     for post in posts:
         eventTime = post["eventTime"]
         url = post["url"]
-        if (eventTime < curTime+timedelta(hours=2)):
+        if (curTime+timedelta(hours=1) < eventTime < curTime+timedelta(hours=2)):
+            tweeted = True
             location = post["location"]
             title = post["shortTitle"]
             if (len(location) > 0):
@@ -243,13 +245,11 @@ def inTwoHours():
                     location = "på " + location
                 else:
                     location = "i " + location
-                tweets.append("Nu börjar snart " + title + location + "! \n" + url)
+                queue.append("Nu börjar snart " + title + location + "! \n" + url)
             else:
-                tweets.append("Nu börjar snart " + title + "! \n" + url)
-    if (len(tweets) > 0):
-        queue.append(tweets)
-        writeLog("Following events found for the next two hours: \n" + "\n".join(tweets))
-    else:
+                queue.append("Nu börjar snart " + title + "! \n" + url)
+            writeLog("Following events found for the next two hours: \n" + "\n".join(tweets))
+    if (not tweeted):
         writeLog("No events coming up in the next two hours")
 
 def gatherPosts():
