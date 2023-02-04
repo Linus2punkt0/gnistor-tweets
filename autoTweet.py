@@ -236,7 +236,11 @@ def inTwoHours():
             location = post["location"]
             title = post["shortTitle"]
             if (len(location) > 0):
-                tweets.append("Nu börjar snart " + title + " (" + location + ")! \n" + url)
+                if (location == "Internet"):
+                    location = "på " + location
+                else:
+                    location = "i " + location
+                tweets.append("Nu börjar snart " + title + location + "! \n" + url)
             else:
                 tweets.append("Nu börjar snart " + title + "! \n" + url)
     if (len(tweets) > 0):
