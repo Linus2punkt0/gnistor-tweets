@@ -133,9 +133,9 @@ def comingWeek():
             location = post["location"]
             title = post["title"]
             if (len(location) > 0):
-                eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ", " + location + ": " + title + " " + url
+                eventInfo = eventTime.strftime("%d/%m %H:%M") + ", " + location + ": " + title + " " + url
             else:
-                eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + " " + url
+                eventInfo = eventTime.strftime("%d/%m %H:%M") + ": " + title + " " + url
             if (len(tweet) + len(eventInfo) < 280):
                 if (len(tweet) == 0 and len(tweets) == 0):
                     tweet = "Här är kommande veckans händelser:\n"
@@ -166,9 +166,9 @@ def comingMonth():
             title = post["title"]
             location = post["location"]
             if (len(location) > 0):
-                eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ", " + location + ": " + title + " " + url
+                eventInfo = eventTime.strftime("%d/%m %H:%M") + ", " + location + ": " + title + " " + url
             else:
-                eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + " " + url
+                eventInfo = eventTime.strftime("%d/%m %H:%M") + ": " + title + " " + url
             if (len(tweet) + len(eventInfo) < 280):
                 if (len(tweet) == 0 and len(tweets) == 0):
                     tweet = "Här är alla händelser i kalendern för " + month + ":\n"
