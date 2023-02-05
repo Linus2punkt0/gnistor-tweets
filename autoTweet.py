@@ -89,7 +89,7 @@ def getNewEvents():
             for line in cal:
                 eventArr = line.replace('\n', "").split(',')
                 url = eventArr[0]
-                eventTime = datetime.strptime(eventArr[1], '%Y-%m-%d %X%z')
+                eventTime = datetime.strptime(eventArr[1], '%d/%m %Y %X%z')
                 if (eventTime > curTime):
                     localEvents.append(url)
         if (len(localEvents) > 0):
@@ -103,9 +103,9 @@ def getNewEvents():
                     title = post["title"]
                     writeLog("New event: " + title)
                     if (len(location) > 0):
-                        eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + " (" + location + ") " + url
+                        eventInfo = eventTime.strftime("%d/%m %Y %H:%M") + ": " + title + " (" + location + ") " + url
                     else:
-                        eventInfo = eventTime.strftime("%Y-%m-%d %H:%M") + ": " + title + url
+                        eventInfo = eventTime.strftime("%d/%m %Y %H:%M") + ": " + title + url
                     writeLog("Eventinfo: " + eventInfo)
                     if (len(tweet) + len(eventInfo) < 280):
                         if (len(tweet) == 0 and len(tweets) == 0):
