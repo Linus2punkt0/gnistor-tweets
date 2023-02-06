@@ -89,7 +89,7 @@ def getNewEvents():
             for line in cal:
                 eventArr = line.replace('\n', "").split(',')
                 url = eventArr[0]
-                eventTime = datetime.strptime(eventArr[1], '%d/%m %Y %X%z')
+                eventTime = datetime.strptime(eventArr[1], '%Y-%d-%m  %X%z')
                 if (eventTime > curTime):
                     localEvents.append(url)
         if (len(localEvents) > 0):
