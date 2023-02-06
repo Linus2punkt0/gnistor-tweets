@@ -282,17 +282,21 @@ def postTweets():
         waitTime = 5
     else:
         waitTime = 1
-    a = ""
     for section in queue:
-        writeLog("Following tweets found in current section: " + ", ".join(section))
-        for tweet in section:
-            if (len(a) == 0):
-                writeLog("Posting tweet: " + tweet)
-                a = twitter.update_status(status=tweet, auto_populate_reply_metadata=True)
-            else:
-                writeLog("Posting tweet: " + tweet + " as a reply")
-                a = twitter.update_status(status=tweet, in_reply_to_status_id=a["id"], auto_populate_reply_metadata=True)
-        writeLog("Reply from Twitter: " + a)
+        a = ""
+        if (isinstance(section, str)):
+            a = twitter.update_status(status=section, auto_populate_reply_metadata=True)
+            writeLog("Following tweet found in current section: " + section)
+        else:
+            writeLog("Following tweets found in current section: " + ", ".join(section))
+            for tweet in section:
+                if (len(a) == 0):
+                    writeLog("Posting tweet: " + tweet)
+                    a = twitter.update_status(status=tweet, auto_populate_reply_metadata=True)
+                else:
+                    writeLog("Posting tweet: " + tweet + " as a reply")
+                    a = twitter.update_status(status=tweet, in_reply_to_status_id=a["id"], auto_populate_reply_metadata=True)
+            writeLog("Reply from Twitter: " + a)
         time.sleep(waitTime * 60)
 
 
