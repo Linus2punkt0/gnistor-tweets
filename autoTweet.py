@@ -196,7 +196,7 @@ def todayTomorrow():
         title = post["title"]
         location = post["location"]
         if (len(location) > 0):
-            eventInfo = eventTime.strftime("%H:%M") + ", " + location + ": " + title + " " + url
+            eventInfo = eventTime.strftime("%H:%M") + " (" + location + "): " + title + " " + url
         else:
             eventInfo = eventTime.strftime("%H:%M") + ": " + title + " " + url
         if (eventTime.date() == curTime.date()):
