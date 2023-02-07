@@ -151,7 +151,7 @@ def comingWeek():
         writeLog("Following events found for the coming week: \n" + "\n".join(tweets))
     else:
         writeLog("No events in the coming week")
-    
+
 def comingMonth():
     saved = locale._setlocale(locale.LC_TIME)
     locale.setlocale(locale.LC_TIME, 'sv_SE')
@@ -220,7 +220,7 @@ def todayTomorrow():
     if (len(tomorrow) > 0):
         tomorrows.append(tomorrow)
     if (len(todays) > 0):
-        queue.append(today)
+        queue.append(todays)
         writeLog("Following events found for today: \n" + "\n".join(todays))
     else:
         writeLog("No events for today")
@@ -285,8 +285,8 @@ def postTweets():
     for section in queue:
         a = ""
         if (isinstance(section, str)):
-            a = twitter.update_status(status=section, auto_populate_reply_metadata=True)
             writeLog("Following tweet found in current section: " + section)
+            a = twitter.update_status(status=section, auto_populate_reply_metadata=True)
         else:
             writeLog("Following tweets found in current section: " + ", ".join(section))
             for tweet in section:
@@ -296,7 +296,7 @@ def postTweets():
                 else:
                     writeLog("Posting tweet: " + tweet + " as a reply")
                     a = twitter.update_status(status=tweet, in_reply_to_status_id=a["id"], auto_populate_reply_metadata=True)
-            writeLog("Reply from Twitter: " + a)
+            writeLog("Reply from Twitter: " + str(a))
         time.sleep(waitTime * 60)
 
 
