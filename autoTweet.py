@@ -103,7 +103,7 @@ def getNewEvents():
                     title = post["title"]
                     writeLog("New event: " + title)
                     if (len(location) > 0):
-                        eventInfo = eventTime.strftime("%d/%m %Y %H:%M") + ": " + title + " (" + location + ") " + url
+                        eventInfo = eventTime.strftime("%d/%m %Y %H:%M") + " " + location + ": " + title + " " + " " + url
                     else:
                         eventInfo = eventTime.strftime("%d/%m %Y %H:%M") + ": " + title + url
                     writeLog("Eventinfo: " + eventInfo)
@@ -133,7 +133,7 @@ def comingWeek():
             location = post["location"]
             title = post["title"]
             if (len(location) > 0):
-                eventInfo = eventTime.strftime("%d/%m %H:%M") + ", " + location + ": " + title + " " + url
+                eventInfo = eventTime.strftime("%d/%m %H:%M") + " " + location + ": " + title + " " + url
             else:
                 eventInfo = eventTime.strftime("%d/%m %H:%M") + ": " + title + " " + url
             if (len(tweet) + len(eventInfo) < 280):
@@ -166,7 +166,7 @@ def comingMonth():
             title = post["title"]
             location = post["location"]
             if (len(location) > 0):
-                eventInfo = eventTime.strftime("%d/%m %H:%M") + ", " + location + ": " + title + " " + url
+                eventInfo = eventTime.strftime("%d/%m %H:%M") + " " + location + ": " + title + " " + url
             else:
                 eventInfo = eventTime.strftime("%d/%m %H:%M") + ": " + title + " " + url
             if (len(tweet) + len(eventInfo) < 280):
@@ -196,7 +196,7 @@ def todayTomorrow():
         title = post["title"]
         location = post["location"]
         if (len(location) > 0):
-            eventInfo = eventTime.strftime("%H:%M") + " (" + location + "): " + title + " " + url
+            eventInfo = eventTime.strftime("%H:%M") + " " + location + ": " + title + " " + url
         else:
             eventInfo = eventTime.strftime("%H:%M") + ": " + title + " " + url
         if (eventTime.date() == curTime.date()):
