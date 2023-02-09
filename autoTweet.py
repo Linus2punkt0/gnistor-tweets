@@ -93,7 +93,6 @@ def getNewEvents():
                 if (eventTime > curTime):
                     localEvents.append(url)
         if (len(localEvents) > 0):
-            tweet = ""
             tweets = []
             for post in posts:
                 eventTime = post["eventTime"]
@@ -103,28 +102,20 @@ def getNewEvents():
                     title = post["title"]
                     writeLog("New event: " + title)
                     if (len(location) > 0):
-                        eventInfo = eventTime.strftime("%d/%m %Y %H:%M") + " " + location + ": " + title + " " + " " + url
+                        eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\nVar: " + location + "\n" + url
                     else:
-                        eventInfo = eventTime.strftime("%d/%m %Y %H:%M") + ": " + title + url
+                        eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\n" + url
                     writeLog("Eventinfo: " + eventInfo)
-                    if (len(tweet) + len(eventInfo) < 280):
-                        if (len(tweet) == 0 and len(tweets) == 0):
-                            writeLog("This is the first tweet with new events")
-                            tweet = "Nya event i kalendern:\n"
-                        tweet += eventInfo + "\n"
-                    else:
-                        tweets.append(tweet)
-                        tweet = "Nya event i kalendern:\n"
-            if (len(tweet) > 30):
-                tweets.append(tweet)
-            if (len(tweets) > 0):
+                    if (len(tweets) == 0):
+                        tweets.append("Nya event har lagts till i kalendern:")
+                    tweets.append(eventInfo)
+            if (len(tweets) > 1):
                 queue.append(tweets)
                 writeLog("Following new events found: \n" + "\n".join(tweets))
             else:
                 writeLog("No new events in the calendar")
 
 def comingWeek():
-    tweet = ""
     tweets = []
     for post in posts:
         eventTime = post["eventTime"]
@@ -133,20 +124,13 @@ def comingWeek():
             location = post["location"]
             title = post["title"]
             if (len(location) > 0):
-                eventInfo = eventTime.strftime("%d/%m %H:%M") + " " + location + ": " + title + " " + url
+                eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\nVar: " + location + "\n" + url
             else:
-                eventInfo = eventTime.strftime("%d/%m %H:%M") + ": " + title + " " + url
-            if (len(tweet) + len(eventInfo) < 280):
-                if (len(tweet) == 0 and len(tweets) == 0):
-                    tweet = "Här är kommande veckans händelser:\n"
-                tweet += eventInfo + "\n"
-            else:
-                tweets.append(tweet)
-                tweet = ""
-                tweet += eventInfo + "\n"
-    if (len(tweet) > 0):
-        tweets.append(tweet)
-    if (len(tweets) > 0):
+                eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\n" + url
+            if (len(tweets) == 0):
+                tweets.append("Här är händelserna för den kommande veckan:")
+            tweets.append(eventInfo)
+    if (len(tweets) > 1):
         queue.append(tweets)
         writeLog("Following events found for the coming week: \n" + "\n".join(tweets))
     else:
@@ -157,7 +141,6 @@ def comingMonth():
     locale.setlocale(locale.LC_TIME, 'sv_SE')
     month = (curTime+timedelta(days=1)).strftime('%B')
     locale.setlocale(locale.LC_TIME, saved)
-    tweet = ""
     tweets = []
     for post in posts:
         eventTime = post["eventTime"]
@@ -166,29 +149,20 @@ def comingMonth():
             title = post["title"]
             location = post["location"]
             if (len(location) > 0):
-                eventInfo = eventTime.strftime("%d/%m %H:%M") + " " + location + ": " + title + " " + url
+                eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\nVar: " + location + "\n" + url
             else:
-                eventInfo = eventTime.strftime("%d/%m %H:%M") + ": " + title + " " + url
-            if (len(tweet) + len(eventInfo) < 280):
-                if (len(tweet) == 0 and len(tweets) == 0):
-                    tweet = "Här är alla händelser i kalendern för " + month + ":\n"
-                tweet += eventInfo + "\n"
-            else:
-                tweets.append(tweet)
-                tweet = ""
-                tweet += eventInfo + "\n"
-    if (len(tweet) > 0):
-        tweets.append(tweet)
-    if (len(tweets) > 0):
+                eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\n" + url
+            if (len(tweets) == 0):
+                tweets.append("Här är alla händelser i kalendern för " + month + ":")
+            tweets.append(eventInfo)
+    if (len(tweets) > 1):
         queue.append(tweets)
         writeLog("Following events found for the coming month: \n" + "\n".join(tweets))
     else:
         writeLog("No events in the coming month")
 
 def todayTomorrow():
-    today = ""
     todays = []
-    tomorrow = ""
     tomorrows = []
     for post in posts:
         eventTime = post["eventTime"]
@@ -196,35 +170,23 @@ def todayTomorrow():
         title = post["title"]
         location = post["location"]
         if (len(location) > 0):
-            eventInfo = eventTime.strftime("%H:%M") + " " + location + ": " + title + " " + url
+            eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\nVar: " + location + "\n" + url
         else:
-            eventInfo = eventTime.strftime("%H:%M") + ": " + title + " " + url
+            eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\n" + url
         if (eventTime.date() == curTime.date()):
-            if (len(today) + len(eventInfo) < 280):
-                if (len(today) == 0 and len(todays) == 0):
-                    today = "Här är dagens evenemang:\n"
-                today += eventInfo + "\n"
-            else:
-                todays.append(today)
-                today = ""
+            if (len(todays) == 0):
+                todays.append("Här är dagens evenemang:")
+            todays.append(eventInfo)
         elif (eventTime.date() == curTime.date() + timedelta(days=1)):
-            if (len(tomorrow) + len(eventInfo) < 280):
-                if (len(tomorrow) == 0 and len(tomorrows) == 0):
-                    tomorrow = "Här är vad som händer imorgon:\n"
-                tomorrow += eventInfo + "\n"
-            else:
-                tomorrows.append(tomorrow)
-                tomorrow = ""
-    if (len(today) > 0):
-        todays.append(today)
-    if (len(tomorrow) > 0):
-        tomorrows.append(tomorrow)
-    if (len(todays) > 0):
+            if (len(tomorrows) == 0):
+                tomorrows.append("Här är vad som händer imorgon:")
+            tomorrows.append(eventInfo)
+    if (len(todays) > 1):
         queue.append(todays)
         writeLog("Following events found for today: \n" + "\n".join(todays))
     else:
         writeLog("No events for today")
-    if (len(tomorrows) > 0):
+    if (len(tomorrows) > 1):
         queue.append(tomorrows)
         writeLog("Following events found for tomorrow: \n" + "\n".join(tomorrows))
     else:
