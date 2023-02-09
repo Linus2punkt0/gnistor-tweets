@@ -210,7 +210,7 @@ def inTwoHours():
                 queue.append("Nu börjar snart " + title + location + "! \n" + url)
             else:
                 queue.append("Nu börjar snart " + title + "! \n" + url)
-            writeLog("Following events found for the next two hours: \n" + "\n".join(tweets))
+            writeLog("Following evenemang found for the next two hours: \n" + "\n".join(tweets))
     if (not tweeted):
         writeLog("No events coming up in the next two hours")
 
