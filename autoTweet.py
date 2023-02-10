@@ -82,6 +82,18 @@ def saveLocalCalendar():
         dst.write(url + "," + eventTime.strftime("%Y-%m-%d %X%z") + "\n" )
         dst.close()
 
+def getEventInfo(title, eventTime, location, url):
+		if (eventTime.strftime("%Y") != curTime.strftime("%Y")):
+			timestamp = eventTime.strftime("%-d/%-m %Y %H:%M")
+		else:
+			timestamp = eventTime.strftime("%-d/%-m %H:%M")
+		if (len(location) > 0):
+			eventInfo = title + "\nNär: " + timestamp + "\nVar: " + location + "\n" + url
+		else:
+			eventInfo = title + "\nNär: " + timestamp + "\n" + url
+		return eventInfo
+
+
 def getNewEvents():
     if (os.path.exists(localCal)):
         localEvents = []
@@ -101,10 +113,7 @@ def getNewEvents():
                 if (eventTime > curTime and url not in localEvents):
                     title = post["title"]
                     writeLog("New event: " + title)
-                    if (len(location) > 0):
-                        eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\nVar: " + location + "\n" + url
-                    else:
-                        eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\n" + url
+                    eventInfo = getEventInfo(title, eventTime, location, url)
                     writeLog("Eventinfo: " + eventInfo)
                     if (len(tweets) == 0):
                         tweets.append("Nya event har lagts till i kalendern:")
@@ -123,10 +132,7 @@ def comingWeek():
         if (eventTime.isocalendar()[1] == curTime.isocalendar()[1] + 1):
             location = post["location"]
             title = post["title"]
-            if (len(location) > 0):
-                eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\nVar: " + location + "\n" + url
-            else:
-                eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\n" + url
+            eventInfo = getEventInfo(title, eventTime, location, url)
             if (len(tweets) == 0):
                 tweets.append("Här är händelserna för den kommande veckan:")
             tweets.append(eventInfo)
@@ -148,10 +154,7 @@ def comingMonth():
         if ((curTime+timedelta(days=1)).month == curTime.month and eventTime.year == (curTime+timedelta(days=1)).year):
             title = post["title"]
             location = post["location"]
-            if (len(location) > 0):
-                eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\nVar: " + location + "\n" + url
-            else:
-                eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\n" + url
+            eventInfo = getEventInfo(title, eventTime, location, url)
             if (len(tweets) == 0):
                 tweets.append("Här är alla händelser i kalendern för " + month + ":")
             tweets.append(eventInfo)
@@ -169,10 +172,7 @@ def todayTomorrow():
         url = post["url"]
         title = post["title"]
         location = post["location"]
-        if (len(location) > 0):
-            eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\nVar: " + location + "\n" + url
-        else:
-            eventInfo = title + "\nNär: " + eventTime.strftime("%d/%m %Y %H:%M") + "\n" + url
+        eventInfo = getEventInfo(title, eventTime, location, url)
         if (eventTime.date() == curTime.date()):
             if (len(todays) == 0):
                 todays.append("Här är dagens evenemang:")
