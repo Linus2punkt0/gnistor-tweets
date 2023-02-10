@@ -116,7 +116,7 @@ def getNewEvents():
                     eventInfo = getEventInfo(title, eventTime, location, url)
                     writeLog("Eventinfo: " + eventInfo)
                     if (len(tweets) == 0):
-                        tweets.append("Nya event har lagts till i kalendern:")
+                        tweets.append("Nya evenemang har lagts till i kalendern:")
                     tweets.append(eventInfo)
             if (len(tweets) > 1):
                 queue.append(tweets)
