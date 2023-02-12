@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-from twython import Twython, TwythonError
-from datetime import date, datetime, timedelta
-from operator import itemgetter
-import time, os, feedparser, csv, pytz
+from twython import Twython
+from datetime import datetime, timedelta
+import time, os, feedparser, pytz
 import auth
+import paths
 import locale
 
 tz = pytz.timezone("Europe/Stockholm")
 curTime = datetime.now(tz)
 timeLimit = curTime - timedelta(hours = 1)
-basePath = "/var/www/local/gnistorTweet"
-logPath = "/var/www/local/logs/"
+basePath = paths.basePath
+logPath = paths.logPath
 localCal = basePath + "/calendar.csv"
 authFile = basePath + "/auth"
 calendar = feedparser.parse("https://www.gnistor.se/feed/index.xml")
